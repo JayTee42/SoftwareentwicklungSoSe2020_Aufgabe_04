@@ -1,9 +1,67 @@
 @startuml
-abstract class SmartPhone {
-    # PhoneNumber : string <<get>> <<set>>
-    + getOS() : string
+enum PhoneState
+{
+   off,
+   on,
+   unknown
 }
-class Program {
-    {static} Main(args:string[]) : void
+
+enum ConnectionState
+{
+   connected,
+   offline
 }
+
+interface Credential {}
+class AppleID {}
+class GoogleAccount {}
+
+AppleID ..|> Credential
+GoogleAccount ..|> Credential
+
+interface Store {}
+class AppStore {}
+class PlayStore {}
+
+AppStore ..|> Store
+PlayStore ..|> Store
+
+abstract class Smartphone
+{
+   + PhoneNumber: string << get >>
+   + makeACall(phoneNumber: string)
+   + receiveACall(incomingNumber: string)
+   + {abstract} getOS(): string
+}
+
+Smartphone "<< get >>" *-- PhoneState
+Smartphone "<< get >>" *-- ConnectionState
+Smartphone -- Credential
+Smartphone -- Store
+
+class ApplePhone
+{
+
+}
+
+ApplePhone --|> Smartphone
+ApplePhone -- AppleID
+ApplePhone -- AppStore
+
+abstract class AndroidPhone
+{
+   {abstract} RunVendorSpecificLocalization()
+}
+
+AndroidPhone --|> Smartphone
+AndroidPhone -- GoogleAccount
+AndroidPhone -- PlayStore
+
+class SonyPhone {}
+class NokiaPhone {}
+
+SonyPhone --|> AndroidPhone
+NokiaPhone --|> AndroidPhone
+
+hide empty members
 @enduml
